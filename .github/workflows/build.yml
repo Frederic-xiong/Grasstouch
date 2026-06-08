@@ -10,9 +10,9 @@ jobs:
     runs-on: macos-14
     timeout-minutes: 45
     env:
-      SCHEME: Throttle
+      SCHEME: Grasstouch
       CONFIGURATION: Release
-      ARCHIVE_PATH: ${{ github.workspace }}/build/Throttle.xcarchive
+      ARCHIVE_PATH: ${{ github.workspace }}/build/Grasstouch.xcarchive
       EXPORT_PATH: ${{ github.workspace }}/build/export
 
     steps:
@@ -69,7 +69,7 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.P12_PASSWORD }}
-          keychain: throttle-build
+          keychain: grasstouch-build
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Install provisioning profiles
@@ -90,15 +90,15 @@ jobs:
             cp "/tmp/$name.mobileprovision" \
               "$HOME/Library/MobileDevice/Provisioning Profiles/$uuid.mobileprovision"
           }
-          install_profile "$PROVISIONING_PROFILE_BASE64" Throttle
-          install_profile "$PROVISIONING_PROFILE_VPN_BASE64" ThrottleVPN
-          install_profile "$PROVISIONING_PROFILE_MONITOR_BASE64" ThrottleMonitor
+          install_profile "$PROVISIONING_PROFILE_BASE64" Grasstouch
+          install_profile "$PROVISIONING_PROFILE_VPN_BASE64" GrasstouchVPN
+          install_profile "$PROVISIONING_PROFILE_MONITOR_BASE64" GrasstouchMonitor
 
       - name: Archive
         run: |
           set -euo pipefail
           xcodebuild \
-            -project Throttle.xcodeproj \
+            -project Grasstouch.xcodeproj \
             -scheme "$SCHEME" \
             -configuration "$CONFIGURATION" \
             -destination "generic/platform=iOS" \
@@ -148,6 +148,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: throttle-ipa
+          name: grasstouch-ipa
           path: ${{ env.EXPORT_PATH }}/*.ipa
           if-no-files-found: ignore

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LockoutView: View {
-    @EnvironmentObject private var state: ThrottleState
+    @EnvironmentObject private var state: GrasstouchState
     @State private var now = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -11,7 +11,7 @@ struct LockoutView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(.orange)
             Text("Locked out").font(.title2).bold()
-            Text("You disabled Throttle. To re-enable, wait out the 24-hour lockout.")
+            Text("You disabled Grasstouch. To re-enable, wait out the 24-hour lockout.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 32)

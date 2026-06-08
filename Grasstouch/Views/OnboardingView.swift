@@ -2,7 +2,7 @@ import SwiftUI
 import FamilyControls
 
 struct OnboardingView: View {
-    @EnvironmentObject private var state: ThrottleState
+    @EnvironmentObject private var state: GrasstouchState
     @State private var pickerShown = false
 
     var body: some View {
@@ -11,7 +11,7 @@ struct OnboardingView: View {
             Image(systemName: "tortoise.fill")
                 .font(.system(size: 72))
                 .foregroundStyle(.green)
-            Text("Throttle")
+            Text("Grasstouch")
                 .font(.largeTitle).bold()
             Text("Slow your connection while a chosen app is open. Friction beats willpower.")
                 .multilineTextAlignment(.center)
@@ -24,7 +24,7 @@ struct OnboardingView: View {
                           text: "While a chosen app is open, your whole connection is throttled — not just that app. iOS does not allow per-app throttling.")
                 HonestRow(icon: "lock.fill",
                           tint: .blue,
-                          text: "Disabling Throttle starts a 24-hour lockout. You cannot re-enable until it expires.")
+                          text: "Disabling Grasstouch starts a 24-hour lockout. You cannot re-enable until it expires.")
                 HonestRow(icon: "hand.raised.fill",
                           tint: .gray,
                           text: "All data stays on your device. No accounts, no servers.")

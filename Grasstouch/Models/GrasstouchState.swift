@@ -4,7 +4,7 @@ import FamilyControls
 import ManagedSettings
 
 @MainActor
-final class ThrottleState: ObservableObject {
+final class GrasstouchState: ObservableObject {
     @Published var hasCompletedOnboarding: Bool
     @Published var throttleLevel: ThrottleLevel
     @Published var tunnelEnabled: Bool

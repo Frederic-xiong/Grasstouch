@@ -1,8 +1,8 @@
 import SwiftUI
 
 @main
-struct ThrottleApp: App {
-    @StateObject private var state = ThrottleState()
+struct GrasstouchApp: App {
+    @StateObject private var state = GrasstouchState()
 
     var body: some Scene {
         WindowGroup {
@@ -15,7 +15,7 @@ struct ThrottleApp: App {
 }
 
 struct RootView: View {
-    @EnvironmentObject private var state: ThrottleState
+    @EnvironmentObject private var state: GrasstouchState
 
     var body: some View {
         if !state.hasCompletedOnboarding {
@@ -23,7 +23,7 @@ struct RootView: View {
         } else {
             TabView {
                 ContentView()
-                    .tabItem { Label("Throttle", systemImage: "tortoise.fill") }
+                    .tabItem { Label("Grasstouch", systemImage: "tortoise.fill") }
                 DashboardView()
                     .tabItem { Label("Dashboard", systemImage: "chart.bar.fill") }
                 SettingsView()
