@@ -1,6 +1,6 @@
-# Throttle — Architecture
+# Grasstouch — Architecture
 
-This document is the source of truth for how Throttle is built. It exists because the
+This document is the source of truth for how Grasstouch is built. It exists because the
 original product brief assumes capabilities iOS does not grant third-party apps, and
 shipping anything to the App Store requires a design that respects those limits.
 
@@ -15,7 +15,7 @@ The brief asks for four things that conflict with the iOS platform:
    `ApplicationToken` / `WebDomainToken` / `ActivityCategoryToken` values — not
    bundle IDs, not names, not icons we can read.
 
-2. **"Throttle the traffic of a specific app."**
+2. **"Grasstouch the traffic of a specific app."**
    `NEPacketTunnelProvider` operates on a system-wide tunnel. Packets arrive without
    originating-process attribution. **Per-app VPN exists only via MDM** (enterprise
    / supervised devices) and is not available to App Store apps. There is no public
@@ -37,10 +37,10 @@ work. We pick a design that ships.
 
 ## 2. Revised product design
 
-Throttle's behavioral thesis — "make the app painful, not blocked" — survives. The
+Grasstouch's behavioral thesis — "make the app painful, not blocked" — survives. The
 mechanism changes:
 
-- **App selection** → `FamilyActivityPicker` (Screen Time). User taps Throttle's
+- **App selection** → `FamilyActivityPicker` (Screen Time). User taps Grasstouch's
   picker; iOS presents a system-rendered list of *their* apps; we receive opaque
   tokens. We never learn the bundle ID, but we can act on the token.
 - **Throttling mechanism** → a **system-wide `NEPacketTunnelProvider`** (Personal
@@ -50,7 +50,7 @@ mechanism changes:
   `FamilyActivitySelection`. When the user closes the app, the tunnel returns to
   unthrottled passthrough.
 - **Honesty about scope** → the App Store description and onboarding both state
-  plainly: *"Throttle slows your whole connection while a chosen app is open. It
+  plainly: *"Grasstouch slows your whole connection while a chosen app is open. It
   cannot slow one app and leave others fast at the same time."* This avoids
   review rejections for misleading claims and avoids user confusion when their
   music streaming stutters.
@@ -68,10 +68,10 @@ mechanism changes:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│  Throttle.app (main target, SwiftUI)                         │
+│  Grasstouch.app (main target, SwiftUI)                         │
 │  • Onboarding & permission flow                              │
 │  • FamilyActivityPicker → FamilyActivitySelection            │
-│  • Throttle level picker (Slow / Medium / Fast)              │
+│  • Grasstouch level picker (Slow / Medium / Fast)              │
 │  • Enable/Disable toggle (+ lockout enforcement)             │
 │  • Dashboard (Charts framework on iOS 16+, custom Canvas <16)│
 │  • Reads/writes to:                                          │
@@ -82,9 +82,9 @@ mechanism changes:
               │ NEVPNManager / NETunnelProviderMgr │ ManagedSettingsStore +
               ▼                                    │ DeviceActivityCenter
 ┌──────────────────────────────────────┐           │
-│  ThrottleVPN (Packet Tunnel Ext.)    │           ▼
+│  GrasstouchVPN (Packet Tunnel Ext.)    │           ▼
 │  • NEPacketTunnelProvider            │  ┌────────────────────────────┐
-│  • On-device loopback (no server)    │  │ ThrottleMonitor             │
+│  • On-device loopback (no server)    │  │ GrasstouchMonitor             │
 │  • Token bucket per direction        │  │ (DeviceActivityMonitorExt)  │
 │  • Reads "active level" from App     │  │ • intervalDidStart/End      │
 │    Group; recomputes bucket rate     │  │ • eventDidReachThreshold    │
@@ -95,11 +95,11 @@ mechanism changes:
 
 ### App Group
 
-`group.app.throttle.shared` — the only sane IPC between the main app, the packet
+`group.app.grasstouch.shared` — the only sane IPC between the main app, the packet
 tunnel, and the device-activity monitor. Holds:
 
 - `throttleLevel: Int` (256 / 1000 / 5000, kbps)
-- `throttleActive: Bool` (set by `ThrottleMonitor` based on app foreground)
+- `throttleActive: Bool` (set by `GrasstouchMonitor` based on app foreground)
 - `tunnelEnabled: Bool` (set by main app)
 - `lockoutUntil: Date?`
 - Atomic byte counters (`bytesUp`, `bytesDown`, rolling) for kbps calc
@@ -109,7 +109,7 @@ tunnel, and the device-activity monitor. Holds:
 
 `CFNotificationCenterGetDarwinNotifyCenter` is the cross-process pub/sub we use to
 wake the main app's speed display when the tunnel updates counters
-(name: `app.throttle.speed.updated`). UserDefaults KVO across App Groups is
+(name: `app.grasstouch.speed.updated`). UserDefaults KVO across App Groups is
 unreliable; Darwin notifications are not.
 
 ## 4. Throttling algorithm

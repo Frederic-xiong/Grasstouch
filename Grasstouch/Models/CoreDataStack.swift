@@ -6,12 +6,12 @@ final class CoreDataStack {
     let container: NSPersistentContainer
 
     private init() {
-        container = NSPersistentContainer(name: "Throttle")
+        container = NSPersistentContainer(name: "Grasstouch")
 
         // Store inside the App Group so the metrics DB is reachable from extensions.
         let storeURL = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: SharedConfig.appGroup)?
-            .appendingPathComponent("Throttle.sqlite")
+            .appendingPathComponent("Grasstouch.sqlite")
         if let url = storeURL {
             let desc = NSPersistentStoreDescription(url: url)
             desc.shouldMigrateStoreAutomatically = true

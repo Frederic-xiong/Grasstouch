@@ -1,10 +1,10 @@
 import Foundation
 
 /// Single point of access to App-Group-shared state. Used by the main app,
-/// `ThrottleVPN` (packet tunnel), and `ThrottleMonitor` (DeviceActivityMonitor).
+/// `GrasstouchVPN` (packet tunnel), and `GrasstouchMonitor` (DeviceActivityMonitor).
 /// All three targets must have the App Groups capability with this identifier.
 enum SharedConfig {
-    static let appGroup = "group.app.throttle.shared"
+    static let appGroup = "group.app.grasstouch.shared"
 
     enum Key {
         static let throttleLevel       = "throttleLevel"        // Int (kbps)
@@ -21,9 +21,9 @@ enum SharedConfig {
     enum Notification {
         /// Posted via `CFNotificationCenterGetDarwinNotifyCenter` by the tunnel
         /// when counters are refreshed. Main app listens to update the speed UI.
-        static let speedUpdated = "app.throttle.speed.updated" as CFString
+        static let speedUpdated = "app.grasstouch.speed.updated" as CFString
         /// Posted by the main app when config changes so the tunnel can re-read.
-        static let configChanged = "app.throttle.config.changed" as CFString
+        static let configChanged = "app.grasstouch.config.changed" as CFString
     }
 
     static var defaults: UserDefaults {

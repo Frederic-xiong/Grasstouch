@@ -1,6 +1,6 @@
-name: Throttle
+name: Grasstouch
 options:
-  bundleIdPrefix: app.throttle
+  bundleIdPrefix: app.grasstouch
   deploymentTarget:
     iOS: "15.0"
   developmentLanguage: en
@@ -20,91 +20,91 @@ settings:
 
 targets:
 
-  Throttle:
+  Grasstouch:
     type: application
     platform: iOS
     sources:
-      - path: Throttle
+      - path: Grasstouch
     info:
-      path: Throttle/Info.plist
+      path: Grasstouch/Info.plist
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.throttle.Throttle
-        CODE_SIGN_ENTITLEMENTS: Throttle/Throttle.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: app.grasstouch.Grasstouch
+        CODE_SIGN_ENTITLEMENTS: Grasstouch/Grasstouch.entitlements
         TARGETED_DEVICE_FAMILY: "1"
         SUPPORTS_MACCATALYST: NO
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
     dependencies:
-      - target: ThrottleVPN
+      - target: GrasstouchVPN
         embed: true
         codeSign: true
-      - target: ThrottleMonitor
+      - target: GrasstouchMonitor
         embed: true
         codeSign: true
     entitlements:
-      path: Throttle/Throttle.entitlements
+      path: Grasstouch/Grasstouch.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.app.throttle.shared
+          - group.app.grasstouch.shared
         com.apple.developer.networking.networkextension:
           - packet-tunnel-provider
         com.apple.developer.family-controls: true
 
-  ThrottleVPN:
+  GrasstouchVPN:
     type: app-extension
     platform: iOS
     sources:
-      - path: ThrottleVPN
+      - path: GrasstouchVPN
       # Share these files with the extension so it can read App Group state
       # without a Swift package boundary.
-      - path: Throttle/Models/SharedConfig.swift
-      - path: Throttle/Services/DarwinNotification.swift
+      - path: Grasstouch/Models/SharedConfig.swift
+      - path: Grasstouch/Services/DarwinNotification.swift
     info:
-      path: ThrottleVPN/Info.plist
+      path: GrasstouchVPN/Info.plist
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.throttle.Throttle.ThrottleVPN
-        CODE_SIGN_ENTITLEMENTS: ThrottleVPN/ThrottleVPN.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: app.grasstouch.Grasstouch.GrasstouchVPN
+        CODE_SIGN_ENTITLEMENTS: GrasstouchVPN/GrasstouchVPN.entitlements
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: NO
     entitlements:
-      path: ThrottleVPN/ThrottleVPN.entitlements
+      path: GrasstouchVPN/GrasstouchVPN.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.app.throttle.shared
+          - group.app.grasstouch.shared
         com.apple.developer.networking.networkextension:
           - packet-tunnel-provider
 
-  ThrottleMonitor:
+  GrasstouchMonitor:
     type: app-extension
     platform: iOS
     sources:
-      - path: ThrottleMonitor
-      - path: Throttle/Models/SharedConfig.swift
-      - path: Throttle/Services/DarwinNotification.swift
+      - path: GrasstouchMonitor
+      - path: Grasstouch/Models/SharedConfig.swift
+      - path: Grasstouch/Services/DarwinNotification.swift
     info:
-      path: ThrottleMonitor/Info.plist
+      path: GrasstouchMonitor/Info.plist
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.throttle.Throttle.ThrottleMonitor
-        CODE_SIGN_ENTITLEMENTS: ThrottleMonitor/ThrottleMonitor.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: app.grasstouch.Grasstouch.GrasstouchMonitor
+        CODE_SIGN_ENTITLEMENTS: GrasstouchMonitor/GrasstouchMonitor.entitlements
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: NO
     entitlements:
-      path: ThrottleMonitor/ThrottleMonitor.entitlements
+      path: GrasstouchMonitor/GrasstouchMonitor.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.app.throttle.shared
+          - group.app.grasstouch.shared
         com.apple.developer.family-controls: true
 
 schemes:
-  Throttle:
+  Grasstouch:
     build:
       targets:
-        Throttle: all
-        ThrottleVPN: all
-        ThrottleMonitor: all
+        Grasstouch: all
+        GrasstouchVPN: all
+        GrasstouchMonitor: all
     run:
       config: Debug
     archive:

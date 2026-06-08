@@ -1,13 +1,13 @@
-# Throttle
+# Grasstouch
 
 iOS app that slows your connection while a chosen addictive app is in the foreground, so you stop reaching for it. Honest about what iOS allows — see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## What it actually does
 
 - You pick apps through the system Screen Time picker (`FamilyActivityPicker`).
-- When one of those apps is open, Throttle engages a token-bucket bandwidth cap (256 kbps / 1 Mbps / 5 Mbps) on the device's connection via an on-device VPN tunnel.
+- When one of those apps is open, Grasstouch engages a token-bucket bandwidth cap (256 kbps / 1 Mbps / 5 Mbps) on the device's connection via an on-device VPN tunnel.
 - When you close the app, full speed returns.
-- Disabling Throttle starts a 24-hour lockout. You can't re-enable until it expires.
+- Disabling Grasstouch starts a 24-hour lockout. You can't re-enable until it expires.
 
 It does **not** throttle one app while leaving others at full speed — iOS does not expose per-process packet attribution to App Store apps. The whole device gets slow while the chosen app is up.
 
@@ -22,11 +22,11 @@ It does **not** throttle one app while leaving others at full speed — iOS does
 
 See [ARCHITECTURE.md §3](./ARCHITECTURE.md#3-components). Targets:
 
-- `Throttle` — main SwiftUI app
-- `ThrottleVPN` — packet tunnel network extension
-- `ThrottleMonitor` — DeviceActivityMonitor extension
+- `Grasstouch` — main SwiftUI app
+- `GrasstouchVPN` — packet tunnel network extension
+- `GrasstouchMonitor` — DeviceActivityMonitor extension
 
-All three share App Group `group.app.throttle.shared`.
+All three share App Group `group.app.grasstouch.shared`.
 
 ## Building locally
 
@@ -35,7 +35,7 @@ The Xcode project is generated from [`project.yml`](./project.yml) by [XcodeGen]
 ```bash
 brew install xcodegen
 make project          # runs xcodegen generate
-open Throttle.xcodeproj
+open Grasstouch.xcodeproj
 # select a real device — NetworkExtension does not run in the simulator
 # Cmd+R
 ```
@@ -62,4 +62,4 @@ The workflow has not been exercised end-to-end from this repo — it is written 
 
 ## Privacy
 
-All data stays on device. The VPN is on-device loopback; no traffic leaves through Throttle's servers (there are no Throttle servers). Full statement: [docs/PRIVACY_POLICY.md](./docs/PRIVACY_POLICY.md).
+All data stays on device. The VPN is on-device loopback; no traffic leaves through Grasstouch's servers (there are no Grasstouch servers). Full statement: [docs/PRIVACY_POLICY.md](./docs/PRIVACY_POLICY.md).

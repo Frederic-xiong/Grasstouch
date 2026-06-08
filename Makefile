@@ -8,4 +8,4 @@ install-tools:
 	brew install xcodegen
 
 clean:
-	rm -rf Throttle.xcodeproj build DerivedData
+	rm -rf Grasstouch.xcodeproj build DerivedData

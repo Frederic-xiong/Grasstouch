@@ -2,7 +2,7 @@ import SwiftUI
 import FamilyControls
 
 struct ContentView: View {
-    @EnvironmentObject private var state: ThrottleState
+    @EnvironmentObject private var state: GrasstouchState
     @State private var pickerShown = false
     @State private var errorMessage: String?
 
@@ -20,7 +20,7 @@ struct ContentView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Throttle")
+            .navigationTitle("Grasstouch")
             .familyActivityPicker(isPresented: $pickerShown, selection: Binding(
                 get: { state.selection },
                 set: { state.setSelection($0) }

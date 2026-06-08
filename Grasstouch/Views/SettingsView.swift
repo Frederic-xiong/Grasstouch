@@ -2,7 +2,7 @@ import SwiftUI
 import FamilyControls
 
 struct SettingsView: View {
-    @EnvironmentObject private var state: ThrottleState
+    @EnvironmentObject private var state: GrasstouchState
     @State private var pickerShown = false
 
     var body: some View {
@@ -26,12 +26,12 @@ struct SettingsView: View {
                 }
                 Section("About") {
                     LabeledContent("Version", value: appVersion)
-                    NavigationLink("How Throttle works") { AboutView() }
+                    NavigationLink("How Grasstouch works") { AboutView() }
                     Link("Privacy policy",
-                         destination: URL(string: "https://throttle.app/privacy")!)
+                         destination: URL(string: "https://grasstouch.app/privacy")!)
                 }
                 Section {
-                    Text("Throttle does not throttle a single app — iOS does not expose per-app traffic to App Store apps. While a chosen app is open, your whole connection is slowed.")
+                    Text("Grasstouch does not throttle a single app — iOS does not expose per-app traffic to App Store apps. While a chosen app is open, your whole connection is slowed.")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }
@@ -55,15 +55,15 @@ private struct AboutView: View {
         ScrollView {
             Text(
 """
-Throttle uses iOS Screen Time to know when you open a chosen app. While that app is in the foreground, an on-device VPN caps your bandwidth using a token-bucket algorithm. When you close the app, full speed returns.
+Grasstouch uses iOS Screen Time to know when you open a chosen app. While that app is in the foreground, an on-device VPN caps your bandwidth using a token-bucket algorithm. When you close the app, full speed returns.
 
-No traffic leaves your device through Throttle. There is no Throttle server. All metrics, settings, and lockout state are stored locally.
+No traffic leaves your device through Grasstouch. There is no Grasstouch server. All metrics, settings, and lockout state are stored locally.
 
-Throttle cannot slow one app while leaving others fast — iOS does not give App Store apps that ability. The whole device gets slow while a chosen app is open.
+Grasstouch cannot slow one app while leaving others fast — iOS does not give App Store apps that ability. The whole device gets slow while a chosen app is open.
 """
             )
             .padding()
         }
-        .navigationTitle("How Throttle works")
+        .navigationTitle("How Grasstouch works")
     }
 }

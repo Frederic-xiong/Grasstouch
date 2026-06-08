@@ -4,7 +4,7 @@ import NetworkExtension
 /// Owns the `NETunnelProviderManager` instance. Creating the manager triggers
 /// the system "Allow VPN configuration" prompt the first time.
 actor TunnelController {
-    private let providerBundleID = "app.throttle.Throttle.ThrottleVPN"
+    private let providerBundleID = "app.grasstouch.Grasstouch.GrasstouchVPN"
 
     func start() async throws {
         let manager = try await loadOrCreateManager()
@@ -27,7 +27,7 @@ actor TunnelController {
         // is never contacted because the tunnel processes packets in-process.
         proto.serverAddress = "localhost"
         manager.protocolConfiguration = proto
-        manager.localizedDescription = "Throttle"
+        manager.localizedDescription = "Grasstouch"
         manager.isEnabled = true
         try await manager.saveToPreferences()
         try await manager.loadFromPreferences()

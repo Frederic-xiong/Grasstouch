@@ -4,15 +4,15 @@ import FamilyControls
 import ManagedSettings
 
 /// Schedules a continuous DeviceActivity monitoring window for the user's
-/// `FamilyActivitySelection`. The `ThrottleMonitor` extension receives the
+/// `FamilyActivitySelection`. The `GrasstouchMonitor` extension receives the
 /// `eventDidReachThreshold` / `intervalDidStart` callbacks and flips the
 /// shared `throttleActive` flag the tunnel reads.
 struct DeviceActivityScheduler {
     static let shared = DeviceActivityScheduler()
 
     private let center = DeviceActivityCenter()
-    private let activityName = DeviceActivityName("app.throttle.allDay")
-    private let eventName = DeviceActivityEvent.Name("app.throttle.appOpened")
+    private let activityName = DeviceActivityName("app.grasstouch.allDay")
+    private let eventName = DeviceActivityEvent.Name("app.grasstouch.appOpened")
 
     func reschedule(for selection: FamilyActivitySelection) {
         center.stopMonitoring([activityName])

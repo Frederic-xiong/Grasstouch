@@ -4,7 +4,7 @@ import Foundation
 /// On-device packet tunnel. There is no remote server: packets are read from
 /// `packetFlow`, optionally delayed by a token bucket, then written back.
 /// Throttling is only applied while `SharedConfig.Key.throttleActive == true`,
-/// which the `ThrottleMonitor` extension flips when a selected app comes to
+/// which the `GrasstouchMonitor` extension flips when a selected app comes to
 /// foreground. Otherwise we passthrough at line rate.
 ///
 /// CAVEAT: A pure-loopback NEPacketTunnelProvider that "writes packets back"
@@ -20,7 +20,7 @@ import Foundation
 final class PacketTunnelProvider: NEPacketTunnelProvider {
     private var bucketDown = TokenBucket(bytesPerSecond: 256_000 / 8)
     private var bucketUp = TokenBucket(bytesPerSecond: 256_000 / 8)
-    private let bucketQueue = DispatchQueue(label: "app.throttle.bucket")
+    private let bucketQueue = DispatchQueue(label: "app.grasstouch.bucket")
     private var configObserver: DarwinNotificationObserver?
     private var counterFlushTimer: DispatchSourceTimer?
     private var pendingBytesDown: Int64 = 0
