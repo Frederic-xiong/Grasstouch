@@ -30,18 +30,17 @@ All three share App Group `group.app.throttle.shared`.
 
 ## Building locally
 
+The Xcode project is generated from [`project.yml`](./project.yml) by [XcodeGen](https://github.com/yonkov/XcodeGen). It is not committed.
+
 ```bash
+brew install xcodegen
+make project          # runs xcodegen generate
 open Throttle.xcodeproj
-# select the Throttle scheme, a real device (NetworkExtension does not run in the simulator)
+# select a real device — NetworkExtension does not run in the simulator
 # Cmd+R
 ```
 
-You will need to:
-
-1. Set your team in all three targets.
-2. Enable the **Network Extensions** capability on `ThrottleVPN` (Packet Tunnel).
-3. Enable the **Family Controls** capability on the main app (requires the entitlement granted by Apple).
-4. Enable the **App Groups** capability on all three targets with `group.app.throttle.shared`.
+Set your dev team once, either by exporting `DEVELOPMENT_TEAM=ABCD123456` before `make project`, or in Xcode → Signing & Capabilities after opening. Targets, embedded extensions, App Groups, Family Controls, and Network Extensions are wired by the spec — no manual capability clicks. Full notes in [docs/XCODE_SETUP.md](./docs/XCODE_SETUP.md).
 
 ## CI / TestFlight
 
