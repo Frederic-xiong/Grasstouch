@@ -1,0 +1,115 @@
+name: Throttle
+options:
+  bundleIdPrefix: app.throttle
+  deploymentTarget:
+    iOS: "15.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    # DEVELOPMENT_TEAM is injected via the DEVELOPMENT_TEAM env var at generate time.
+    DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
+
+targets:
+
+  Throttle:
+    type: application
+    platform: iOS
+    sources:
+      - path: Throttle
+    info:
+      path: Throttle/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.throttle.Throttle
+        CODE_SIGN_ENTITLEMENTS: Throttle/Throttle.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTS_MACCATALYST: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies:
+      - target: ThrottleVPN
+        embed: true
+        codeSign: true
+      - target: ThrottleMonitor
+        embed: true
+        codeSign: true
+    entitlements:
+      path: Throttle/Throttle.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.app.throttle.shared
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.developer.family-controls: true
+
+  ThrottleVPN:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ThrottleVPN
+      # Share these files with the extension so it can read App Group state
+      # without a Swift package boundary.
+      - path: Throttle/Models/SharedConfig.swift
+      - path: Throttle/Services/DarwinNotification.swift
+    info:
+      path: ThrottleVPN/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.throttle.Throttle.ThrottleVPN
+        CODE_SIGN_ENTITLEMENTS: ThrottleVPN/ThrottleVPN.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+    entitlements:
+      path: ThrottleVPN/ThrottleVPN.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.app.throttle.shared
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+
+  ThrottleMonitor:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ThrottleMonitor
+      - path: Throttle/Models/SharedConfig.swift
+      - path: Throttle/Services/DarwinNotification.swift
+    info:
+      path: ThrottleMonitor/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.throttle.Throttle.ThrottleMonitor
+        CODE_SIGN_ENTITLEMENTS: ThrottleMonitor/ThrottleMonitor.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+    entitlements:
+      path: ThrottleMonitor/ThrottleMonitor.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.app.throttle.shared
+        com.apple.developer.family-controls: true
+
+schemes:
+  Throttle:
+    build:
+      targets:
+        Throttle: all
+        ThrottleVPN: all
+        ThrottleMonitor: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+    profile:
+      config: Release
+    analyze:
+      config: Debug

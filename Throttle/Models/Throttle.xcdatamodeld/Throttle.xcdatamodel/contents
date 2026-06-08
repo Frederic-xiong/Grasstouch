@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ThrottleSession" representedClassName="ThrottleSession" syncable="YES" codeGenerationType="class">
+        <attribute name="bytesThrottled" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="endedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="level" attributeType="Integer 16" defaultValueString="256" usesScalarValueType="YES"/>
+        <attribute name="startedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="samples" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MetricSample" inverseName="session" inverseEntity="MetricSample"/>
+    </entity>
+    <entity name="MetricSample" representedClassName="MetricSample" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="kbpsDown" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="kbpsUp" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ThrottleSession" inverseName="samples" inverseEntity="ThrottleSession"/>
+    </entity>
+</model>
