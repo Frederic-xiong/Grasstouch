@@ -14,7 +14,6 @@ jobs:
       CONFIGURATION: Release
       ARCHIVE_PATH: ${{ github.workspace }}/build/Throttle.xcarchive
       EXPORT_PATH: ${{ github.workspace }}/build/export
-      KEYCHAIN: throttle-build.keychain
 
     steps:
       - name: Checkout
@@ -31,23 +30,47 @@ jobs:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: xcodegen generate
 
-      - name: Import signing certificate
+      - name: Verify certificate secret is present
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           set -euo pipefail
-          echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > /tmp/cert.p12
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security import /tmp/cert.p12 -k "$KEYCHAIN" \
-            -P "$P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
-          security set-key-partition-list -S apple-tool:,apple:,codesign: \
-            -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security list-keychains -d user -s "$KEYCHAIN" \
-            $(security list-keychains -d user | tr -d '"')
+          if [ -z "${BUILD_CERTIFICATE_BASE64:-}" ]; then
+            echo "::error::BUILD_CERTIFICATE_BASE64 secret is empty."
+            exit 1
+          fi
+          if [ -z "${P12_PASSWORD:-}" ]; then
+            echo "::error::P12_PASSWORD secret is empty."
+            exit 1
+          fi
+          # Decode without `echo` (which appends a newline that can corrupt
+          # short base64 streams) and using `tr -d` to strip any whitespace
+          # that may have been pasted into the secret.
+          printf '%s' "$BUILD_CERTIFICATE_BASE64" | tr -d '[:space:]' | base64 -d > /tmp/cert.p12
+          SIZE=$(wc -c < /tmp/cert.p12)
+          echo "Decoded p12 size: $SIZE bytes"
+          if [ "$SIZE" -lt 1000 ]; then
+            echo "::error::Decoded p12 is suspiciously small ($SIZE bytes). The secret is probably not a valid base64-encoded .p12."
+            exit 1
+          fi
+          file /tmp/cert.p12
+          # Verify the password is correct before letting `security` near it,
+          # so we get a clear "wrong password" message instead of the cryptic
+          # SecKeychainItemImport error.
+          if ! openssl pkcs12 -in /tmp/cert.p12 -passin "pass:${P12_PASSWORD}" -nokeys -noout 2>/tmp/p12.err; then
+            echo "::error::p12 verification failed. Likely a wrong P12_PASSWORD or a corrupted secret."
+            sed 's/^/openssl: /' /tmp/p12.err
+            exit 1
+          fi
+
+      - name: Import signing certificate
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+          keychain: throttle-build
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Install provisioning profiles
         env:
@@ -128,7 +151,3 @@ jobs:
           name: throttle-ipa
           path: ${{ env.EXPORT_PATH }}/*.ipa
           if-no-files-found: ignore
-
-      - name: Cleanup keychain
-        if: always()
-        run: security delete-keychain "$KEYCHAIN" || true
